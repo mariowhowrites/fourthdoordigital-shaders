@@ -1,17 +1,22 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
+import Welcome from "../components/Welcome.astro";
+import Layout from "../layouts/Layout.astro";
+import { getCollection } from "astro:content";
 
-const shaders = await getCollection('shaders');
+const shaders = await getCollection("shaders");
 ---
 
 <Layout>
 	<ul>
-		{shaders.map(({ slug }) => (
-			<li>
-				<a href={`/shaders/${slug}`}>{slug}</a>
-			</li>
-		))}
+		{
+			shaders.map(({ data: { slug } }) => {
+				const name = slug.split('.').shift();
+				return (
+					<li>
+						<a href={`/shaders/${name}`}>{slug}</a>
+					</li>
+				);
+			})
+		}
 	</ul>
 </Layout>
