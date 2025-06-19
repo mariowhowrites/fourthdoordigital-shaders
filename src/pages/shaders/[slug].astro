@@ -1,0 +1,31 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import GlslCanvas from 'glslCanvas';
+
+export async function getStaticPaths() {
+  const shaders = await getCollection('shaders');
+
+	return shaders.map((shader) => {
+    const slug = shader.id.split(".").shift();
+
+		return {
+			params: { slug },
+			props: { shader: shader.data.code },
+		};
+	});
+}
+
+const { shader } = Astro.props;
+---
+
+<Layout>
+  <canvas class="glslCanvas" data-fragment={shader} width="500" height="500"></canvas>
+</Layout>
+
+<script>
+	const canvas = document.querySelector('.glslCanvas');
+	const glslCanvas = new GlslCanvas(canvas);
+</script>
